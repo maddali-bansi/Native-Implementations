@@ -1,7 +1,7 @@
 Input :  k-number of clusters and D-set of data objects
 Output : Set of K-Clusters
 
-Algorithm :
+Algorithm 
 
 1.Randomly choose 'k' objects from D as initial cluster centers
 2.repeat:
