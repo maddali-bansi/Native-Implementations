@@ -37,10 +37,12 @@ def k_means(k_clusters, data_df):
                     data_df.at[index, 'cluster'] = cluster_id
                 cluster_id += 1
 
+        # Find the centroids and re-assign the cluster mean
         clusters = data_df.groupby('cluster').mean()
         # print(data_df)
         # print(clusters)
         # print("=============================")
+        # Iterate till cluster mean is constant
         if iteration != 0 and prev_clusters.equals(clusters):
             converge = True
         iteration += 1
