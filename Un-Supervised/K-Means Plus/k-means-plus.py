@@ -8,8 +8,39 @@ def euclidean_distance(cx, cy, cz, x, y, z):
     return math.sqrt((cx - x) ** 2 + (cy - y) ** 2 + (cz - z) ** 2)
 
 
+def get_cluster_coordinates_k_mean_plus(k_clusters, data_df):
+    initial_point_index = data_df.sample(1, replace=False).index
+    initial_point = data_df.loc[initial_point_index]
+    clusters_df = initial_point
+    while k_clusters > 1:
+        global max
+        max = -math.inf
+        max_index = initial_point_index
+        for index, datapoint in data_df.iterrows():
+
+            # Single data point
+            x = datapoint['x']
+            y = datapoint['y']
+            z = datapoint['z']
+
+            distance = euclidean_distance(initial_point['x'], initial_point['y'], initial_point['z'], x, y, z)
+            if distance > max:
+                max = distance
+                max_index = index
+
+        # print("Max Distance Points ", data_df.loc[initial_point_index], " and ",
+        #       data_df.loc[max_index], " with distance ", max)
+
+        initial_point = data_df.loc[max_index]
+        clusters_df = clusters_df.append(initial_point)
+        k_clusters -= 1
+    print(clusters_df)
+    return clusters_df
+
+
 def k_means(k_clusters, data_df):
-    clusters = data_df.sample(k_clusters, replace=False)
+    # clusters = data_df.sample(k_clusters, replace=False)
+    clusters = get_cluster_coordinates_k_mean_plus(k_clusters, data_df)
     data_df['cluster'] = 0
     converge = False
     iteration = 0

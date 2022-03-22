@@ -1,0 +1,10 @@
+Input :  k-number of clusters and D-set of data objects
+Output : Set of K-Clusters
+
+Algorithm
+
+1.** Choose 'k' objects from D as initial cluster centers which are at a maximum distance
+2.repeat
+2.1 re-assign each object to cluster to which the object is most similar(nearest)
+2.2 Update the cluster means for each cluster
+until no change
