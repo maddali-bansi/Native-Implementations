@@ -6,17 +6,20 @@ import math
 
 # Where x and y are two data points
 def euclidean_distance(cx, cy, x, y):
-    return math.sqrt((cx - x) ^ 2 + (cy - y) ^ 2)
+    return math.sqrt((cx - x) ** 2 + (cy - y) ** 2)
 
 
 def k_means(k_clusters, data_df):
-    global min
-    clusters = data_df.sample(k_clusters, replace=False)  # Randomly Choose Clusters from available Data Points
-    final_clusters = list()
+    clusters = data_df.sample(k_clusters, replace=False)
+    data_df['cluster'] = 0
+    converge = False
     assigned_cluster = 0
-    if k_clusters <= len(data_df):  # Number of clusters should be less or equal to actual data points
+    while not converge:
+        # Assign Clusters
         for index, datapoint in data_df.iterrows():
-            min = math.inf
+            minimum = math.inf
+
+            # Single data point
             x = datapoint['x']
             y = datapoint['y']
 
@@ -26,18 +29,23 @@ def k_means(k_clusters, data_df):
                 cx = cluster['x']
                 cy = cluster['y']
                 distance = euclidean_distance(cx, cy, x, y)
-                if distance < min:
-                    min = distance
-                    assigned_cluster = cluster_id
+                if distance < minimum:
+                    minimum = distance
+                    data_df.at[index, 'cluster'] = cluster_id
                 cluster_id += 1
-            print(x, y, " assigned cluster = ", assigned_cluster, "Cluster Co-ordinates = ",
-                  clusters.values[assigned_cluster - 1])
+        print(data_df)
+        print(clusters)
+        print("=============================")
+        if clusters.equals(data_df.groupby('cluster').mean()):
+            converge = True
+        else:
+            clusters = data_df.groupby('cluster').mean()
 
 
 if __name__ == '__main__':
     k = 3
-    data = {'x': [1, 2, 3, 4, 5],
-            'y': [100, 200, 300, 400, 500]
+    data = {'x': [800, 10, 30, 40, 500],
+            'y': [900, 20, 40, 50, 600]
             }
     df = pd.DataFrame(data)
     k_means(k, df)
